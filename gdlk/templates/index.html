@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <title>GDLK READ</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='bower_components/bootstrap/dist/css/bootstrap.css') }}">
+  </head>
+
+  <body>
+    <nav class="navbar navbar-inverse" role="navigation">
+      <div class="navbar-header">
+        <a class="navbar-brand">GDLK READ</a>
+      </div>
+
+      <ul class="nav navbar-nav">
+        <li><a href="/combos">Combos</a></li>
+        <li><a href="/notes">Notes</a></li>
+        <li><a href="/videos">Videos</a></li>
+      </ul>
+    </nav>
+
+    <script src="{{ url_for('static', filename='bower_components/angular/angular.js') }}"></script>
+  </body>
+</html>

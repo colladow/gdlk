@@ -1,0 +1,11 @@
+dist
+bower_components
+node_modules
+
+
+.idea
+*.db
+*.pyc
+*.swp
+
+gdlk/config
