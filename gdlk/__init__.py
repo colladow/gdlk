@@ -21,3 +21,4 @@ if config:
     app.config.update(config)
 
 import gdlk.pages
+import gdlk.combos

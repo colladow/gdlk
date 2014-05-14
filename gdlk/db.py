@@ -25,3 +25,25 @@ def init_db():
         with app.open_resource('config/schema.sql', mode='r') as f:
             db.cursor().executescript(f.read())
         db.commit()
+
+def normalize_rows(rows):
+    keys = rows[0].keys()
+    l = []
+
+    for r in rows:
+        d = {}
+
+        for k in keys:
+            d[k] = r[k]
+
+        l.append(d)
+
+    return l
+
+def build_insert(table, row):
+    keys = [k for k in row]
+
+    fields = ', '.join(keys)
+    values = ', '.join(['?' for i in range(len(keys))])
+
+    return 'insert into %s (%s) values (%s)' % (table, fields, values)
