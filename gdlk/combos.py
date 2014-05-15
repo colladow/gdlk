@@ -46,9 +46,23 @@ def combos_put(cid):
         set title = ?,
             game = ?,
             character = ?,
-            commands = ?
+            commands = ?,
+            updated = current_timestamp
         where id = ?
     ''', combo)
+
+    db.commit()
+
+    return make_response(json.dumps({ 'success': 'ok' }), 200, {})
+
+@app.route('/combos/<int:cid>', methods=['DELETE'])
+def combos_delete(cid):
+    db = get_db()
+
+    db.execute('''
+        delete from combos
+        where id = ?
+    ''', [cid])
 
     db.commit()
 
