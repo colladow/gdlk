@@ -27,6 +27,9 @@ def init_db():
         db.commit()
 
 def normalize_rows(rows):
+    if len(rows) == 0:
+        return []
+
     keys = rows[0].keys()
     l = []
 
@@ -39,11 +42,3 @@ def normalize_rows(rows):
         l.append(d)
 
     return l
-
-def build_insert(table, row):
-    keys = [k for k in row]
-
-    fields = ', '.join(keys)
-    values = ', '.join(['?' for i in range(len(keys))])
-
-    return 'insert into %s (%s) values (%s)' % (table, fields, values)

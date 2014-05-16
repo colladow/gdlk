@@ -1,69 +1,107 @@
 import json
 
-from flask import make_response, request
+from flask import make_response, request, abort
+from flask.views import MethodView
 
-from gdlk import app
-from gdlk.db import get_db, normalize_rows, build_insert
+from gdlk import app, register_api
+from gdlk.db import get_db, normalize_rows
 
-def clean_combo(form):
-    return [
-        form['title'],
-        form['game'],
-        form['character'],
-        form['commands']
+class ComboAPI(MethodView):
+
+    select_fields = [
+        'id', 'title', 'game_id', 'author',
+        'character', 'commands','is_public',
+        'video_url', 'created', 'updated'
     ]
 
-@app.route('/combos')
-def combos_index():
-    db = get_db()
-    cur = db.execute('select id, title, game, character, commands from combos')
+    update_fields = [
+        'title', 'game_id', 'author',
+        'character', 'commands', 'is_public',
+        'video_url', 'updated'
+    ]
 
-    combos = cur.fetchall()
+    def _clean_form(self, form):
+        return map(lambda k: form[k], ComboAPI.update_fields)
 
-    return json.dumps(normalize_rows(combos))
+    def get(self, combo_id):
+        db = get_db()
 
-@app.route('/combos', methods=['POST'])
-def combos_post():
-    db = get_db()
-    combo = clean_combo(request.form)
+        select = ', '.join(ComboAPI.select_fields)
 
-    db.execute('''
-        insert into combos (title, game, character, commands) values (?, ?, ?, ?)
-    ''', combo)
+        if combo_id is not None:
+            cur = db.execute('''
+                select %s
+                from combos
+                where id = ?
+            ''' % select, [combo_id])
 
-    db.commit()
+            combos = cur.fetchall()
 
-    return make_response(json.dumps({ 'success': 'ok' }), 201, {})
+            if len(combos) == 0:
+                abort(404)
+            else:
+                combos = normalize_rows(combos)[0]
+        else:
+            cur = db.execute('''
+                select %s
+                from combos
+            ''' % select, [])
 
-@app.route('/combos/<int:cid>', methods=['PUT'])
-def combos_put(cid):
-    db = get_db()
-    combo = clean_combo(request.form)
-    combo.append(cid)
+            combos = normalize_rows(cur.fetchall())
 
-    db.execute('''
-        update combos
-        set title = ?,
-            game = ?,
-            character = ?,
-            commands = ?,
-            updated = current_timestamp
-        where id = ?
-    ''', combo)
+        return json.dumps(combos)
 
-    db.commit()
+    def post(self):
+        db = get_db()
+        combo = self._clean_form(request.form)
 
-    return make_response(json.dumps({ 'success': 'ok' }), 200, {})
+        insert = ', '.join(ComboAPI.update_fields)
+        qs = ', '.join(['?' for i in range(len(ComboAPI.update_fields))])
 
-@app.route('/combos/<int:cid>', methods=['DELETE'])
-def combos_delete(cid):
-    db = get_db()
+        db.execute('''
+            insert into combos (%s) values (%s)
+        ''' % (insert, qs), combo)
 
-    db.execute('''
-        delete from combos
-        where id = ?
-    ''', [cid])
+        db.commit()
 
-    db.commit()
+        return make_response(json.dumps({ 'success': 'ok' }), 201, {})
 
-    return make_response(json.dumps({ 'success': 'ok' }), 200, {})
+    def put(self, combo_id):
+        db = get_db()
+        combo = self._clean_form(request.form)
+        combo.append(combo_id)
+
+        update = []
+
+        for f in ComboAPI.update_fields:
+            if f == 'updated':
+                update.append('updated = current_timestamp')
+                continue
+
+            update.append('%s = ?' % f)
+
+        update = ', '.join(update)
+
+        db.execute('''
+            update combos
+            set %s
+            where id = ?
+        ''' % update, combo)
+
+        db.commit()
+
+        return make_response(json.dumps({ 'success': 'ok' }), 200, {})
+
+    def delete(self, combo_id):
+        db = get_db()
+
+        db.execute('''
+            delete from combos
+            where id = ?
+        ''', [combo_id])
+
+        db.commit()
+
+        return make_response(json.dumps({ 'success': 'ok' }), 200, {})
+
+register_api(ComboAPI, 'combo_api', '/combos/', pk='combo_id')
