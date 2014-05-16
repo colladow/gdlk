@@ -94,7 +94,7 @@ class UserAPI(MethodView):
     def put(self, user_id):
         db = get_db()
 
-        values = [
+        user = [
             request.form['email'],
             request.form['handle']
         ]
@@ -103,7 +103,7 @@ class UserAPI(MethodView):
             update users
             set email = ?,
                 handle = ?
-        ''' % update, user)
+        ''', user)
 
         db.commit()
 
