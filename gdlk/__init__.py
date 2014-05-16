@@ -30,3 +30,4 @@ def register_api(view, endpoint, url, pk='id', pk_type='int'):
 
 import gdlk.pages
 import gdlk.combos
+import gdlk.users
