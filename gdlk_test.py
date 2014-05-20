@@ -84,5 +84,69 @@ class GdlkTestCase(unittest.TestCase):
        rv = self.app.get('/users/2')
        assert rv.status_code == 404
 
+    def test_combo_create(self):
+        data = {
+            'title': 'Wombo',
+            'game_id': 1,
+            'author': 1,
+            'character': 'Dictator',
+            'commands': 'short short short short LK.scissor kick'
+        }
+
+        rv = self._load_response(self.app.post('/combos/', data=data))
+        assert rv['success'] == 'ok'
+
+    def test_combo_get(self):
+        data = {
+            'title': 'Wombo',
+            'game_id': 1,
+            'author': 1,
+            'character': 'Dictator',
+            'commands': 'short short short short LK.scissor kick'
+        }
+
+        self.app.post('/combos/', data=data)
+
+        rv = self._load_response(self.app.get('/combos/1'))
+        assert rv['title'] == 'Wombo'
+
+    def test_combo_update(self):
+        data = {
+            'title': 'Wombo',
+            'game_id': 1,
+            'author': 1,
+            'character': 'Dictator',
+            'commands': 'short short short short LK.scissor kick'
+        }
+
+        self.app.post('/combos/', data=data)
+
+        changed = {
+            'title': 'Combo'
+        }
+
+        rv = self._load_response(self.app.put('/combos/1', data=changed))
+        assert rv['success'] == 'ok'
+
+        rv = self._load_response(self.app.get('/combos/1'))
+        assert rv['title'] == 'Combo'
+
+    def test_combo_delete(self):
+        data = {
+            'title': 'Wombo',
+            'game_id': 1,
+            'author': 1,
+            'character': 'Dictator',
+            'commands': 'short short short short LK.scissor kick'
+        }
+
+        self.app.post('/combos/', data=data)
+
+        rv = self._load_response(self.app.delete('/combos/1'))
+        assert rv['success'] == 'ok'
+
+        rv = self.app.get('/combos/1')
+        assert rv.status_code == 404
+
 if __name__ == '__main__':
     unittest.main()

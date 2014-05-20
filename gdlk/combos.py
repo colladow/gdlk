@@ -21,7 +21,15 @@ class ComboAPI(MethodView):
     ]
 
     def _clean_form(self, form):
-        return map(lambda k: form[k], ComboAPI.update_fields)
+        keys = []
+        values = []
+
+        for k in ComboAPI.update_fields:
+            if form.has_key(k):
+                keys.append(k)
+                values.append(form[k])
+
+        return keys, values
 
     def get(self, combo_id):
         db = get_db()
@@ -53,10 +61,10 @@ class ComboAPI(MethodView):
 
     def post(self):
         db = get_db()
-        combo = self._clean_form(request.form)
+        fields, combo = self._clean_form(request.form)
 
-        insert = ', '.join(ComboAPI.update_fields)
-        qs = ', '.join(['?' for i in range(len(ComboAPI.update_fields))])
+        insert = ', '.join(fields)
+        qs = ', '.join(['?' for i in range(len(fields))])
 
         db.execute('''
             insert into combos (%s) values (%s)
@@ -68,12 +76,12 @@ class ComboAPI(MethodView):
 
     def put(self, combo_id):
         db = get_db()
-        combo = self._clean_form(request.form)
+        fields, combo = self._clean_form(request.form)
         combo.append(combo_id)
 
         update = []
 
-        for f in ComboAPI.update_fields:
+        for f in fields:
             if f == 'updated':
                 update.append('updated = current_timestamp')
                 continue
