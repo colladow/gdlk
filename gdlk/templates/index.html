@@ -16,25 +16,25 @@
       </div>
 
       <ul class="nav navbar-nav">
-        <li><a href="#/combos">Combos</a></li>
+        <li><a href="#/combos/list">Combos</a></li>
         <li><a href="#/notes">Notes</a></li>
         <li><a href="#/videos">Videos</a></li>
       </ul>
     </nav>
 
-    <main>
-      <section class="content" ui-view>
-      </section>
+    <main ui-view>
     </main>
 
     <script src="{{ url_for('static', filename='bower_components/angular/angular.js') }}"></script>
     <script src="{{ url_for('static', filename='bower_components/angular-ui-router/release/angular-ui-router.js') }}"></script>
 
     <script src="{{ url_for('static', filename='js/gdlk.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/gdlk-utils.js') }}"></script>
     <script src="{{ url_for('static', filename='js/home/home-controller.js') }}"></script>
 
     <script src="{{ url_for('static', filename='js/combos/combos.js') }}"></script>
     <script src="{{ url_for('static', filename='js/combos/combo-service.js') }}"></script>
     <script src="{{ url_for('static', filename='js/combos/list-controller.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/combos/details-controller.js') }}"></script>
   </body>
 </html>

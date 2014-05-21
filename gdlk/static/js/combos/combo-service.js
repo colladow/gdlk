@@ -2,22 +2,17 @@
 
   var combos = angular.module('gdlk.combos');
 
-  combos.factory('Combo', function($http) {
+  combos.factory('Combo', function($http, serviceUtils) {
 
     return {
       query: function() {
-        return $http.get('combos/');
+        return serviceUtils.checkStatusCode($http.get('combos/'));
+      },
+
+      get: function(id) {
+        return serviceUtils.checkStatusCode($http.get('combos/' + id));
       }
     };
-
-    // return $resource('combos/:comboID', {}, {
-    //   query: {
-    //     method: 'GET',
-    //     params: {
-    //     },
-    //     isArray: true
-    //   }
-    // });
 
   });
 

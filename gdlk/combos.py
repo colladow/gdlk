@@ -34,13 +34,15 @@ class ComboAPI(MethodView):
     def get(self, combo_id):
         db = get_db()
 
-        select = ', '.join(ComboAPI.select_fields)
-
         if combo_id is not None:
+            select = ', '.join(['c.' + s for s in ComboAPI.select_fields])
+
             cur = db.execute('''
-                select %s
-                from combos
-                where id = ?
+                select %s, g.name as gameName
+                from combos c
+                    inner join games g
+                    on c.game_id = g.id
+                where c.id = ?
             ''' % select, [combo_id])
 
             combos = cur.fetchall()
@@ -50,6 +52,8 @@ class ComboAPI(MethodView):
             else:
                 combos = normalize_rows(combos)[0]
         else:
+            select = ', '.join(ComboAPI.select_fields)
+
             cur = db.execute('''
                 select %s
                 from combos

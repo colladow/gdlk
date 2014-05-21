@@ -3,7 +3,9 @@
 
   var gdlk = angular.module('gdlk', ['ui.router', 'gdlk.combos']);
 
-  gdlk.config(function($stateProvider) {
+  gdlk.config(function($stateProvider, $urlRouterProvider) {
+    $urlRouterProvider.otherwise('/');
+
     $stateProvider.state('index', {
       url: '/',
       templateUrl: '/static/js/home/index.html',

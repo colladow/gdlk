@@ -1,3 +1,7 @@
-<ul>
-  <li ng-repeat="combo in combos"><a href="/combos/{{combo.id}}">{{combo.title}}</a></li>
-</ul>
+<div class="list-group">
+  <a class="list-group-item active" href="#/combos/new">
+    <span class="glyphicon glyphicon-plus"></span>
+    New Combo
+  </a>
+  <a class="list-group-item" ng-repeat="combo in combos" href="#/combos/{{combo.id}}">{{combo.title}}</a>
+</div>
