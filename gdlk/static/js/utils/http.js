@@ -1,9 +1,9 @@
 (function(window, angular) {
   'use strict';
 
-  var gdlkUtils = angular.module('gdlk.utils', []);
+  var utils = angular.module('gdlk.utils');
 
-  gdlkUtils.factory('serviceUtils', function($q) {
+  utils.factory('httpUtils', function($q) {
     return {
       checkStatusCode: function(request, desiredCode) {
         var deferred = $q.defer();
