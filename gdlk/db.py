@@ -1,44 +1,44 @@
+import json
+from datetime import datetime
+
 from flask import g
-import sqlite3
+import pymongo
 
 from gdlk import app
 
+DB_CONFIG = app.config['DATABASE']
+
 def connect_db():
-    rv = sqlite3.connect(app.config['DATABASE'])
-    rv.row_factory = sqlite3.Row
-    return rv 
+    return pymongo.MongoClient(DB_CONFIG['HOST'], DB_CONFIG['PORT'])
 
-def get_db():
-    if not hasattr(g, 'sqlite_db'):
-        g.sqlite_db = connect_db()
+def get_conn():
+    if not hasattr(g, 'mongo_conn'):
+        g.mongo_conn = connect_db()
 
-    return g.sqlite_db
+    return g.mongo_conn
+
+def get_db(collection):
+    return get_conn()[DB_CONFIG['NAME']][collection]
 
 @app.teardown_appcontext
 def close_db(error):
-    if hasattr(g, 'sqlite_db'):
-        g.sqlite_db.close()
+    if hasattr(g, 'mongo_conn'):
+        g.mongo_conn.close()
 
-def init_db(fname='config/schema.sql'):
+def init_db(fname='config/seed.json'):
     with app.app_context():
-        db = get_db()
         with app.open_resource(fname, mode='r') as f:
-            db.cursor().executescript(f.read())
-        db.commit()
+            data = json.loads(f.read())
 
-def normalize_rows(rows):
-    if len(rows) == 0:
-        return []
+            for key, collection in data.iteritems():
+                get_db(key).drop()
+                db = get_db(key)
 
-    keys = rows[0].keys()
-    l = []
-
-    for r in rows:
-        d = {}
-
-        for k in keys:
-            d[k] = r[k]
-
-        l.append(d)
-
-    return l
+                for obj in collection:
+                    for k, v in obj.iteritems():
+                        if isinstance(v, dict):
+                            if v.has_key('date'):
+                                v[k] = datetime.strptime(v['date'], '%Y-%m-%d')
+                            elif v.has_key('datetime'):
+                                v[k] = datetime.strptime(v['datetime'], '%Y-%m-%d %H:%M:%S')
+                db.insert(collection)

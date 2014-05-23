@@ -1,29 +1,20 @@
-import json
-import bcrypt
+from datetime import datetime
 
+import bcrypt
+from bson import json_util
+from bson.objectid import ObjectId
 from flask import make_response, request, abort, session
 from flask.views import MethodView
 
 from gdlk import app, register_api
-from gdlk.db import get_db, normalize_rows
+from gdlk.db import get_db
 
 class User:
     @classmethod
     def get(cls, user_id):
-        db = get_db()
+        db = get_db('users')
 
-        cur = db.execute('''
-            select id, email, handle
-            from users
-            where id = ?
-        ''', [user_id])
-
-        rows = normalize_rows(cur.fetchall())
-
-        if len(rows) == 0:
-            return None
-        else:
-            return rows[0]
+        return db.find_one({ '_id': ObjectId(user_id) })
 
     @classmethod
     def hash_password(cls, password):
@@ -31,29 +22,21 @@ class User:
 
     @classmethod
     def set_password(cls, user_id, pw):
-        db = get_db()
+        db = get_db('users')
 
         password = cls.hash_password(pw)
 
-        cur = db.execute('''
-            update users
-            set password = ?
-            where id = ?
-        ''', [password, user_id])
-
-        db.commit()
+        return db.update({ '_id': ObjectId(user_id) }, { '$set': { 'password': password }})
 
     @classmethod
     def check_password(cls, email, password):
-        db = get_db()
+        db = get_db('users')
 
-        cur = db.execute('''
-            select password
-            from users
-            where email = ?
-        ''', [email])
+        user = db.find_one({ 'email': email })
 
-        hashed = cur.fetchall()[0]['password'].encode('utf-8')
+        if user is None: return False
+
+        hashed = user['password'].encode('utf-8')
 
         return bcrypt.hashpw(password.encode('utf-8'), hashed) == hashed
 
@@ -62,64 +45,59 @@ class UserAPI(MethodView):
         if user_id is not None:
             users = User.get(user_id)
 
-            if users is None:
-                abort(404)
+            if users is None: abort(404)
         else:
-            cur = db.execute('''
-                select email, handle
-                from users
-            ''' % select, [])
+            users = list(get_db('users').find({}))
 
-            users = normalize_rows(cur.fetchall())
-
-        return json.dumps(users)
+        return json_util.dumps(users)
 
     def post(self):
-        db = get_db()
+        db = get_db('users')
 
-        values = [
-            request.form['email'],
-            request.form['handle'],
-            User.hash_password(request.form['password'])
-        ]
+        new_user = {
+            'email': request.form['email'],
+            'handle': request.form['handle'],
+            'password': User.hash_password(request.form['password']),
+            'created': datetime.now(),
+            'updated': datetime.now()
+        }
 
-        db.execute('''
-            insert into users (email, handle, password) values (?, ?, ?)
-        ''', values)
+        db.insert(new_user)
 
-        db.commit()
-
-        return make_response(json.dumps({ 'success': 'ok' }), 201, {})
+        if new_user['_id'] is None:
+            return make_response(json_util.dumps({ 'error': 'bodied' }), 400, {})
+        else:
+            return make_response(json_util.dumps(new_user), 201, {})
 
     def put(self, user_id):
-        db = get_db()
+        db = get_db('users')
 
-        user = [
-            request.form['email'],
-            request.form['handle']
-        ]
+        valid_fields = ['email', 'handle']
 
-        db.execute('''
-            update users
-            set email = ?,
-                handle = ?
-        ''', user)
+        changes = {}
 
-        db.commit()
+        for k, v in request.form.iteritems():
+            if k in valid_fields:
+                changes[k] = v
 
-        return make_response(json.dumps({ 'success': 'ok' }), 200, {})
+        if len(changes) == 0:
+            return make_response(json_util.dumps({ 'error': 'bodied' }), 400, {})
+
+        changes['updated'] = datetime.now()
+
+        result = db.update({ '_id': ObjectId(user_id) }, changes)
+
+        if result is None:
+            return make_response(json_util.dumps({ 'error': 'bodied' }), 400, {})
+        else:
+            changes['_id'] = user_id
+
+            return make_response(json_util.dumps(changes), 200, {})
 
     def delete(self, user_id):
-        db = get_db()
+        get_db('users').remove({ '_id': ObjectId(user_id) })
 
-        db.execute('''
-            delete from users
-            where id = ?
-        ''', [user_id])
-
-        db.commit()
-
-        return make_response(json.dumps({ 'success': 'ok' }), 200, {})
+        return make_response(json_util.dumps({ 'success': 'ok' }), 200, {})
 
 @app.route('/login', methods=['POST'])
 def login():
@@ -127,14 +105,14 @@ def login():
     password = request.form['password']
 
     if not User.check_password(email, password):
-        return make_response(json.dumps({ 'error': 'bodied' }), 403, {})
+        return make_response(json_util.dumps({ 'error': 'bodied' }), 403, {})
 
     session['email'] = email
-    return make_response(json.dumps({ 'success': 'ok' }), 200, {})
+    return make_response(json_util.dumps({ 'success': 'ok' }), 200, {})
 
 @app.route('/logout')
 def logout():
     session.pop('email', None)
-    return make_response(json.dumps({ 'success': 'ok' }), 200, {})
+    return make_response(json_util.dumps({ 'success': 'ok' }), 200, {})
 
 register_api(UserAPI, 'user_api', '/users/', pk='user_id')

@@ -1,119 +1,81 @@
-import json
+from datetime import datetime
 
+from bson import json_util
+from bson.objectid import ObjectId
 from flask import make_response, request, abort
 from flask.views import MethodView
 
 from gdlk import app, register_api
-from gdlk.db import get_db, normalize_rows
+from gdlk.db import get_db
 
 class ComboAPI(MethodView):
 
-    select_fields = [
-        'id', 'title', 'game_id', 'author',
-        'character', 'commands','is_public',
-        'video_url', 'created', 'updated'
-    ]
-
-    update_fields = [
-        'title', 'game_id', 'author',
-        'character', 'commands', 'is_public',
-        'video_url', 'updated'
-    ]
-
-    def _clean_form(self, form):
-        keys = []
-        values = []
-
-        for k in ComboAPI.update_fields:
-            if form.has_key(k):
-                keys.append(k)
-                values.append(form[k])
-
-        return keys, values
-
     def get(self, combo_id):
-        db = get_db()
+        db = get_db('combos')
 
         if combo_id is not None:
-            select = ', '.join(['c.' + s for s in ComboAPI.select_fields])
+            combos = db.find_one({ '_id': ObjectId(combo_id) })
 
-            cur = db.execute('''
-                select %s, g.name as gameName
-                from combos c
-                    inner join games g
-                    on c.game_id = g.id
-                where c.id = ?
-            ''' % select, [combo_id])
-
-            combos = cur.fetchall()
-
-            if len(combos) == 0:
-                abort(404)
-            else:
-                combos = normalize_rows(combos)[0]
+            if combos is None: abort(404)
         else:
-            select = ', '.join(ComboAPI.select_fields)
+            combos = db.find({})
 
-            cur = db.execute('''
-                select %s
-                from combos
-            ''' % select, [])
-
-            combos = normalize_rows(cur.fetchall())
-
-        return json.dumps(combos)
+        return json_util.dumps(combos)
 
     def post(self):
-        db = get_db()
-        fields, combo = self._clean_form(request.form)
+        db = get_db('combos')
 
-        insert = ', '.join(fields)
-        qs = ', '.join(['?' for i in range(len(fields))])
+        try:
+            combo = {
+                'title': request.form['title'],
+                'game': request.form['game'],
+                'author': request.form['author'],
+                'character': request.form['character'],
+                'commands': request.form['commands'],
+                'public': request.form.get('public', default=False),
+                'videoUrl': request.form.get('videoUrl'),
+                'created': datetime.now(),
+                'updated': datetime.now()
+            }
+        except KeyError:
+            return make_response(json_util.dumps({ 'error': 'bodied' }), 500, {})
 
-        db.execute('''
-            insert into combos (%s) values (%s)
-        ''' % (insert, qs), combo)
+        db.insert(combo)
 
-        db.commit()
-
-        return make_response(json.dumps({ 'success': 'ok' }), 201, {})
+        if combo['_id'] is None:
+            return make_response(json_util.dumps({ 'error': 'bodied' }), 500, {})
+        else:
+            return make_response(json_util.dumps(combo), 201, {})
 
     def put(self, combo_id):
-        db = get_db()
-        fields, combo = self._clean_form(request.form)
-        combo.append(combo_id)
+        db = get_db('combos')
 
-        update = []
+        valid_fields = [
+            'title', 'game', 'author', 'character',
+            'commands', 'public', 'videoUrl',
+        ]
+        changes = {}
 
-        for f in fields:
-            if f == 'updated':
-                update.append('updated = current_timestamp')
-                continue
+        for k, v in request.form.iteritems():
+            if k in valid_fields:
+                changes[k] = v
 
-            update.append('%s = ?' % f)
+        if len(changes) == 0:
+            return make_response(json_util.dumps({ 'error': 'bodied' }), 500, {})
 
-        update = ', '.join(update)
+        changes['updated'] = datetime.now()
 
-        db.execute('''
-            update combos
-            set %s
-            where id = ?
-        ''' % update, combo)
+        result = db.update({ '_id': ObjectId(combo_id) }, changes)
 
-        db.commit()
-
-        return make_response(json.dumps({ 'success': 'ok' }), 200, {})
+        if result is None:
+            return make_response(json_util.dumps({ 'error': 'bodied' }), 500, {})
+        else:
+            changes['_id'] = combo_id
+            return make_response(json_util.dumps(changes), 200, {})
 
     def delete(self, combo_id):
-        db = get_db()
+        get_db('combos').remove({ '_id': ObjectId(combo_id) })
 
-        db.execute('''
-            delete from combos
-            where id = ?
-        ''', [combo_id])
-
-        db.commit()
-
-        return make_response(json.dumps({ 'success': 'ok' }), 200, {})
+        return make_response(json_util.dumps({ 'success': 'ok' }), 200, {})
 
 register_api(ComboAPI, 'combo_api', '/combos/', pk='combo_id')
