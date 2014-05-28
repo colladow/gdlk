@@ -1,7 +1,7 @@
 (function(window, angular) {
   'use strict';
 
-  var combos = angular.module('gdlk.combos', ['ui.router', 'gdlk.utils']);
+  var combos = angular.module('gdlk.combos', ['ui.router', 'gdlk.utils', 'gdlk.combos.builder']);
 
   combos.config(function($stateProvider) {
     $stateProvider.state('combos', {

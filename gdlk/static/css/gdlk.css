@@ -5780,204 +5780,145 @@ button.close {
   margin: 0 4px 8px 0;
   vertical-align: middle;
 }
-.command.stick-up {
+.command.stick {
+  height: 37px;
+  width: 37px;
+}
+.command.stick.up {
   background-image: url(../img/buttons/stick/U.png);
-  height: 37px;
-  width: 37px;
 }
-.command.stick-down {
+.command.stick.down {
   background-image: url(../img/buttons/stick/D.png);
-  height: 37px;
-  width: 37px;
 }
-.command.stick-back {
+.command.stick.back {
   background-image: url(../img/buttons/stick/B.png);
-  height: 37px;
-  width: 37px;
 }
-.command.stick-forward {
+.command.stick.forward {
   background-image: url(../img/buttons/stick/F.png);
-  height: 37px;
-  width: 37px;
 }
-.command.stick-up-forward {
+.command.stick.up-forward {
   background-image: url(../img/buttons/stick/Uf.png);
-  height: 37px;
-  width: 37px;
 }
-.command.stick-up-back {
+.command.stick.up-back {
   background-image: url(../img/buttons/stick/Ub.png);
-  height: 37px;
-  width: 37px;
 }
-.command.stick-down-forward {
+.command.stick.down-forward {
   background-image: url(../img/buttons/stick/Df.png);
-  height: 37px;
-  width: 37px;
 }
-.command.stick-down-back {
+.command.stick.down-back {
   background-image: url(../img/buttons/stick/Db.png);
-  height: 37px;
-  width: 37px;
 }
-.command.stick-half-circle-back {
+.command.stick.half-circle-back {
   background-image: url(../img/buttons/stick/Hcb.png);
-  height: 37px;
-  width: 37px;
 }
-.command.stick-half-circle-forward {
+.command.stick.half-circle-forward {
   background-image: url(../img/buttons/stick/Hcf.png);
-  height: 37px;
-  width: 37px;
 }
-.command.stick-quarter-circle-back {
+.command.stick.quarter-circle-back {
   background-image: url(../img/buttons/stick/Qcb.png);
-  height: 37px;
-  width: 37px;
 }
-.command.stick-quarter-circle-forward {
+.command.stick.quarter-circle-forward {
   background-image: url(../img/buttons/stick/Qcf.png);
-  height: 37px;
-  width: 37px;
 }
-.command.stick-dragon-punch {
+.command.stick.dragon-punch {
   background-image: url(../img/buttons/stick/Dp.png);
-  height: 37px;
-  width: 37px;
 }
-.command.stick-reverse-dragon-punch {
+.command.stick.reverse-dragon-punch {
   background-image: url(../img/buttons/stick/Rdp.png);
-  height: 37px;
-  width: 37px;
 }
-.command.stick-neutral {
+.command.stick.neutral {
   background-image: url(../img/buttons/stick/N.png);
-  height: 37px;
-  width: 37px;
 }
-.command.ssf4-jab {
-  background-image: url(../img/buttons/ssf4/Jab.gif);
+.command.sf4 {
   height: 20px;
   width: 21px;
 }
-.command.ssf4-strong {
-  background-image: url(../img/buttons/ssf4/Strong.gif);
+.command.sf4.jab {
+  background-image: url(../img/buttons/sf4/Jab.gif);
+}
+.command.sf4.strong {
+  background-image: url(../img/buttons/sf4/Strong.gif);
+}
+.command.sf4.fierce {
+  background-image: url(../img/buttons/sf4/Fierce.gif);
+}
+.command.sf4.short {
+  background-image: url(../img/buttons/sf4/Short.gif);
+}
+.command.sf4.forward {
+  background-image: url(../img/buttons/sf4/Forward.gif);
+}
+.command.sf4.roundhouse {
+  background-image: url(../img/buttons/sf4/Roundhouse.gif);
+}
+.command.sf4.three-punch {
+  background-image: url(../img/buttons/sf4/3p.png);
+}
+.command.sf4.three-kick {
+  background-image: url(../img/buttons/sf4/3k.png);
+}
+.command.sf4.kick {
+  background-image: url(../img/buttons/sf4/K.png);
+}
+.command.sf4.punch {
+  background-image: url(../img/buttons/sf4/P.png);
+}
+.command.mvc3 {
   height: 20px;
   width: 21px;
 }
-.command.ssf4-fierce {
-  background-image: url(../img/buttons/ssf4/Fierce.gif);
-  height: 20px;
-  width: 21px;
+.command.mvc3.light {
+  background-image: url(../img/buttons/mvc3/L.png);
 }
-.command.ssf4-short {
-  background-image: url(../img/buttons/ssf4/Short.gif);
-  height: 20px;
-  width: 21px;
+.command.mvc3.medium {
+  background-image: url(../img/buttons/mvc3/M.png);
 }
-.command.ssf4-forward {
-  background-image: url(../img/buttons/ssf4/Forward.gif);
-  height: 20px;
-  width: 21px;
+.command.mvc3.heavy {
+  background-image: url(../img/buttons/mvc3/H.png);
 }
-.command.ssf4-roundhouse {
-  background-image: url(../img/buttons/ssf4/Roundhouse.gif);
-  height: 20px;
-  width: 21px;
+.command.mvc3.special {
+  background-image: url(../img/buttons/mvc3/S.png);
 }
-.command.ssf4-three-punch {
-  background-image: url(../img/buttons/ssf4/3p.png);
-  height: 25px;
-  width: 60px;
+.command.mvc3.attack {
+  background-image: url(../img/buttons/mvc3/Atk.png);
 }
-.command.ssf4-three-kick {
-  background-image: url(../img/buttons/ssf4/3k.png);
-  height: 25px;
-  width: 60px;
+.command.mvc3.assist-1 {
+  background-image: url(../img/buttons/mvc3/A1.png);
 }
-.command.ssf4-kick {
-  background-image: url(../img/buttons/ssf4/K.png);
-  height: 25px;
-  width: 25px;
+.command.mvc3.assist-2 {
+  background-image: url(../img/buttons/mvc3/A2.png);
 }
-.command.ssf4-punch {
-  background-image: url(../img/buttons/ssf4/P.png);
-  height: 25px;
-  width: 25px;
-}
-.command.umvc3-light {
-  background-image: url(../img/buttons/umvc3/L.png);
-  height: 20px;
-  width: 21px;
-}
-.command.umvc3-medium {
-  background-image: url(../img/buttons/umvc3/M.png);
-  height: 20px;
-  width: 21px;
-}
-.command.umvc3-heavy {
-  background-image: url(../img/buttons/umvc3/H.png);
-  height: 20px;
-  width: 21px;
-}
-.command.umvc3-special {
-  background-image: url(../img/buttons/umvc3/S.png);
-  height: 20px;
-  width: 21px;
-}
-.command.umvc3-attack {
-  background-image: url(../img/buttons/umvc3/Atk.png);
-  height: 20px;
-  width: 21px;
-}
-.command.umvc3-assist-1 {
-  background-image: url(../img/buttons/umvc3/A1.png);
-  height: 20px;
-  width: 21px;
-}
-.command.umvc3-assist-2 {
-  background-image: url(../img/buttons/umvc3/A2.png);
-  height: 20px;
-  width: 21px;
-}
-.command.separators-plus {
-  height: 20px;
+.command.separators {
   text-align: center;
+}
+.command.separators:before {
+  font-size: 18px;
+}
+.command.separators.plus {
+  height: 20px;
   width: 16px;
 }
-.command.separators-plus:before {
+.command.separators.plus:before {
   content: '+';
-  font-size: 18px;
 }
-.command.separators-comma {
+.command.separators.comma {
   height: 25px;
-  text-align: center;
   width: 10px;
 }
-.command.separators-comma:before {
+.command.separators.comma:before {
   content: ',';
-  font-size: 18px;
 }
-.command.separators-open-parens {
+.command.separators.open-parens {
   height: 25px;
-  text-align: center;
   width: 15px;
 }
-.command.separators-open-parens:before {
+.command.separators.open-parens:before {
   content: '(';
-  font-size: 18px;
 }
-.command.separators-close-parens {
+.command.separators.close-parens {
   height: 25px;
-  text-align: center;
   width: 15px;
 }
-.command.separators-close-parens:before {
+.command.separators.close-parens:before {
   content: ')';
-  font-size: 18px;
-}
-.preview {
-  border: 2px solid #999;
-  min-height: 200px;
-  padding: 8px;
 }
