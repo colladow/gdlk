@@ -18,6 +18,11 @@
         url: '/{id:[0-9]+}',
         templateUrl: '/static/js/combos/details.html',
         controller: 'DetailsController'
+      })
+      .state('combos.new', {
+        url: '/new',
+        templateUrl: '/static/js/combos/new.html',
+        controller: 'NewController'
       });
   });
 
