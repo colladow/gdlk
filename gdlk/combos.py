@@ -78,4 +78,10 @@ class ComboAPI(MethodView):
 
         return make_response(json_util.dumps({ 'success': 'ok' }), 200, {})
 
+@app.route('/combos/commands', methods=['GET'])
+def list_commands():
+    commands = list(get_db('commands').find({}))
+
+    return json_util.dumps(commands)
+
 register_api(ComboAPI, 'combo_api', '/combos/', pk='combo_id')

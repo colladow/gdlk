@@ -14,4 +14,8 @@
     };
   });
 
+  builder.factory('Commands', function($http, httpUtils) {
+    return httpUtils.checkStatusCode($http.get('/combos/commands'));
+  });
+
 })(window, window.angular);

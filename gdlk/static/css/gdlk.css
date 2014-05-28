@@ -5853,15 +5853,23 @@ button.close {
 }
 .command.sf4.three-punch {
   background-image: url(../img/buttons/sf4/3p.png);
+  height: 25px;
+  width: 60px;
 }
 .command.sf4.three-kick {
   background-image: url(../img/buttons/sf4/3k.png);
+  height: 25px;
+  width: 60px;
 }
 .command.sf4.kick {
   background-image: url(../img/buttons/sf4/K.png);
+  height: 25px;
+  width: 25px;
 }
 .command.sf4.punch {
   background-image: url(../img/buttons/sf4/P.png);
+  height: 25px;
+  width: 25px;
 }
 .command.mvc3 {
   height: 20px;
