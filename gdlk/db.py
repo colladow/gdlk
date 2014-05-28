@@ -1,6 +1,6 @@
-import json
 from datetime import datetime
 
+from bson import json_util
 from flask import g
 import pymongo
 
@@ -28,17 +28,10 @@ def close_db(error):
 def init_db(fname='config/seed.json'):
     with app.app_context():
         with app.open_resource(fname, mode='r') as f:
-            data = json.loads(f.read())
+            data = json_util.loads(f.read())
 
             for key, collection in data.iteritems():
                 get_db(key).drop()
                 db = get_db(key)
 
-                for obj in collection:
-                    for k, v in obj.iteritems():
-                        if isinstance(v, dict):
-                            if v.has_key('date'):
-                                v[k] = datetime.strptime(v['date'], '%Y-%m-%d')
-                            elif v.has_key('datetime'):
-                                v[k] = datetime.strptime(v['datetime'], '%Y-%m-%d %H:%M:%S')
                 db.insert(collection)
