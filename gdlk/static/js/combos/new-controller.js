@@ -4,7 +4,14 @@
   var combos = angular.module('gdlk.combos');
 
   combos.controller('NewController', function($scope, Commands) {
-    $scope.combo = {};
+    $scope.combo = {
+      commands: [
+        {
+          type: 'sf4',
+          move: 'jab'
+        }
+      ]
+    };
 
     Commands.then(function(commands) {
       $scope.commands = commands;
