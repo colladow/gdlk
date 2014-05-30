@@ -1,0 +1,15 @@
+<section class="builder">
+  <div class="preview">
+    <command ng-repeat="command in commands track by command.id" type="{{command.type}}" move="{{command.move}}" ng-click="removeCommand(command)"></command>
+  </div>
+  <div class="tools">
+    <div class="controls">
+      <div ng-repeat="type in typeOrder" class="type" ng-class="type.key">
+        <h3>{{type.label}}</h3>
+        <div class="commands">
+          <command ng-repeat="command in types[type.key]" type="{{command.type}}" move="{{command.move}}" ng-click="addCommand(command)"></command>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

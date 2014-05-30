@@ -1,0 +1,70 @@
+.builder {
+  .tools {
+    margin: 0 1em;
+
+    .controls {
+      display: table;
+      background-color: rgba(0, 0, 0, 0.8);
+      border-radius: 4px;
+      padding: 0.5em;
+      width: 100%;
+
+      .type {
+        display: table-row;
+        height: 44px;
+
+        h3 {
+          display: table-cell;
+          color: #fff;
+          cursor: pointer;
+          font-size: 32px;
+          margin: 0;
+          padding-right: 0.5em;
+          vertical-align: middle;
+        }
+
+        .commands {
+          display: table-cell;
+          border-left: 1px solid #fff;
+          padding: 0 1em;
+          vertical-align: middle;
+
+          .command.separators {
+            color: #fff;
+          }
+        }
+      }
+    }
+  }
+
+  .preview {
+    border: 2px solid #000;
+    border-radius: 4px;
+    min-height: 200px;
+    margin: 0 1em;
+    padding: 1em;
+  }
+}
+
+@media only screen and (max-width: 910px) {
+  .builder .tools .controls .type {
+    h3, .commands {
+      padding-bottom: 1em;
+    }
+  }
+}
+
+//       ul {
+//         float: left;
+//         padding-left: 0.5em;
+//         margin: 0;
+// 
+//         li {
+//           list-style: none;
+//           float: left;
+// 
+//           .command.separators {
+//             color: #fff;
+//           }
+//         }
+//       }

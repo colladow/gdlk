@@ -10,7 +10,8 @@
         type: '@type',
         move: '@move'
       },
-      template: '<div class="command" ng-class="[type, move]"></div>'
+      transclude: true,
+      template: '<span class="command" ng-class="[type, move]"></span>'
     };
   });
 
